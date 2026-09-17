@@ -98,4 +98,64 @@ public class GildedRoseShould {
 
         assertEquals(50, items.get(0).getQuality());
     }
+
+    @Test
+    public void neverLowerSellInForSulfurasBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", 10, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(10, items.get(0).getSellIn());
+    }
+
+    @Test
+    public void neverLowerQualityForSulfurasBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", 10, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(80, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverLowerSellInForSulfurasAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(0, items.get(0).getSellIn());
+    }
+
+    @Test
+    public void neverLowerQualityForSulfurasAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(80, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverLowerSellInForSulfurasWithNegativeSellIn() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", -1, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(-1, items.get(0).getSellIn());
+    }
+
+    @Test
+    public void neverLowerQualityForSulfurasWithNegativeSellIn() {
+        List<Item> items = Arrays.asList(new Item("Sulfuras, Hand of Ragnaros", -1, 80));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(80, items.get(0).getQuality());
+    }
 }
