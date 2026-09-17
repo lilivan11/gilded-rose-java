@@ -36,11 +36,13 @@ public class GildedRose {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
 
+            if (isSulfurasItem(item)) {
+                return;
+            }
+
             if ((!isAgedBrieItem(item)) && !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                 if (item.getQuality() > 0) {
-                    if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                        item.setQuality(item.getQuality() - 1);
-                    }
+                    item.setQuality(item.getQuality() - 1);
                 }
             } else {
                 if (isAgedBrieItem(item)) {
@@ -66,17 +68,13 @@ public class GildedRose {
                 }
             }
 
-            if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                item.setSellIn(item.getSellIn() - 1);
-            }
+            item.setSellIn(item.getSellIn() - 1);
 
             if (item.getSellIn() < 0) {
                 if (!isAgedBrieItem(item)) {
                     if (!"Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                         if (item.getQuality() > 0) {
-                            if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                                item.setQuality(item.getQuality() - 1);
-                            }
+                            item.setQuality(item.getQuality() - 1);
                         }
                     } else {
                         item.setQuality(item.getQuality() - item.getQuality());
@@ -86,6 +84,10 @@ public class GildedRose {
                 }
             }
         }
+    }
+
+    private boolean isSulfurasItem(Item item) {
+        return item.getName().contains("Sulfuras");
     }
 
     private boolean isAgedBrieItem(Item item) {
