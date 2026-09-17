@@ -27,8 +27,8 @@ public class GildedRose {
         items.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
         items.add(new Item("Conjured Mana Cake", 3, 6));
 
-        GildedRose app = new GildedRose(items);
-        app.updateQuality();
+        GildedRose gildedRose = new GildedRose(items);
+        gildedRose.updateQuality();
     }
 
 
