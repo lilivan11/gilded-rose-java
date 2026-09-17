@@ -1,0 +1,25 @@
+#
+# Build (ejecutar desde la raíz del proyecto):
+#   docker build -f TestDockerfile -t gilded-rose-test .
+#
+# Ejecutar toda la suite (comportamiento por defecto):
+#   docker run --rm gilded-rose-test
+#
+
+FROM eclipse-temurin:8-jdk-jammy
+
+WORKDIR /app
+
+COPY gradlew ./
+COPY gradle ./gradle
+COPY build.gradle settings.gradle ./
+
+RUN chmod +x gradlew
+
+RUN ./gradlew --version --no-daemon
+
+COPY src ./src
+
+RUN ./gradlew testClasses --no-daemon || true
+
+CMD ["./gradlew", "test", "--no-daemon", "--console=plain"]
