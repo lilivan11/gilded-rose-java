@@ -48,4 +48,54 @@ public class GildedRoseShould {
 
         assertEquals(0, items.get(0).getQuality());
     }
+
+    @Test
+    public void lowerDaysToSellForAgedBrie() {
+        List<Item> items = Arrays.asList(new Item("Aged Brie", 10, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(9, items.get(0).getSellIn());
+    }
+
+    @Test
+    public void increaseQualityByOneForAgedBrieBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Aged Brie", 10, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(21, items.get(0).getQuality());
+    }
+
+    @Test
+    public void increaseQualityByTwoForAgedBrieAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Aged Brie", 0, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(22, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverIncreaseQualityAboveFiftyForAgedBrieBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Aged Brie", 10, 50));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(50, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverIncreaseQualityAboveFiftyForAgedBrieAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Aged Brie", 0, 49));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(50, items.get(0).getQuality());
+    }
 }
