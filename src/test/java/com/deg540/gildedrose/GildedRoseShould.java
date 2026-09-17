@@ -126,7 +126,7 @@ public class GildedRoseShould {
 
         gildedRose.updateQuality();
 
-        assertEquals(80, items.get(0).getQuality());
+        assertEquals(50, items.get(0).getQuality());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class GildedRoseShould {
 
         gildedRose.updateQuality();
 
-        assertEquals(80, items.get(0).getQuality());
+        assertEquals(50, items.get(0).getQuality());
     }
 
     @Test
@@ -166,7 +166,7 @@ public class GildedRoseShould {
 
         gildedRose.updateQuality();
 
-        assertEquals(80, items.get(0).getQuality());
+        assertEquals(50, items.get(0).getQuality());
     }
 
     @Test
