@@ -6,7 +6,11 @@ import java.util.List;
 
 public class GildedRose {
 
-    private static List<Item> items = null;
+    private List<Item> items = null;
+
+    public GildedRose(List<Item> items) {
+        this.items = items;
+    }
 
     /**
      * @param args
@@ -15,7 +19,7 @@ public class GildedRose {
 
         System.out.println("OMGHAI!");
 
-        items = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         items.add(new Item("+5 Dexterity Vest", 10, 20));
         items.add(new Item("Aged Brie", 2, 0));
         items.add(new Item("Elixir of the Mongoose", 5, 7));
@@ -23,11 +27,12 @@ public class GildedRose {
         items.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
         items.add(new Item("Conjured Mana Cake", 3, 6));
 
-        updateQuality();
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
     }
 
 
-    public static void updateQuality() {
+    public void updateQuality() {
         for (int i = 0; i < items.size(); i++) {
             if ((!"Aged Brie".equals(items.get(i).getName())) && !"Backstage passes to a TAFKAL80ETC concert".equals(items.get(i).getName())) {
                 if (items.get(i).getQuality() > 0) {
