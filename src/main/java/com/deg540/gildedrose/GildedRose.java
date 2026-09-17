@@ -40,7 +40,7 @@ public class GildedRose {
                 return;
             }
 
-            if ((!isAgedBrieItem(item)) && !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+            if ((!isAgedBrieItem(item)) && !isBackstagePassesItem(item)) {
                 if (item.getQuality() > 0) {
                     item.setQuality(item.getQuality() - 1);
                 }
@@ -48,23 +48,7 @@ public class GildedRose {
                 if (isAgedBrieItem(item)) {
                     increaseAgedBrieQuality(item);
                 } else {
-                    if (item.getQuality() < 50) {
-                        item.setQuality(item.getQuality() + 1);
-
-                        if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                            if (item.getSellIn() < 11) {
-                                if (item.getQuality() < 50) {
-                                    item.setQuality(item.getQuality() + 1);
-                                }
-                            }
-
-                            if (item.getSellIn() < 6) {
-                                if (item.getQuality() < 50) {
-                                    item.setQuality(item.getQuality() + 1);
-                                }
-                            }
-                        }
-                    }
+                    increaseBackstagePassesQuality(item);
                 }
             }
 
@@ -72,12 +56,12 @@ public class GildedRose {
 
             if (item.getSellIn() < 0) {
                 if (!isAgedBrieItem(item)) {
-                    if (!"Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+                    if (!isBackstagePassesItem(item)) {
                         if (item.getQuality() > 0) {
                             item.setQuality(item.getQuality() - 1);
                         }
                     } else {
-                        item.setQuality(item.getQuality() - item.getQuality());
+                        expireBackstagePassesQuality(item);
                     }
                 } else {
                     increaseAgedBrieQuality(item);
@@ -95,6 +79,30 @@ public class GildedRose {
     }
 
     private void increaseAgedBrieQuality(Item item) {
+        increaseQuality(item);
+    }
+
+    private boolean isBackstagePassesItem(Item item) {
+        return item.getName().contains("Backstage passes");
+    }
+
+    private void increaseBackstagePassesQuality(Item item) {
+        increaseQuality(item);
+
+        if (item.getSellIn() < 11) {
+            increaseQuality(item);
+        }
+
+        if (item.getSellIn() < 6) {
+            increaseQuality(item);
+        }
+    }
+
+    private void expireBackstagePassesQuality(Item item) {
+        item.setQuality(0);
+    }
+
+    private void increaseQuality(Item item) {
         if (item.getQuality() < 50) {
             item.setQuality(item.getQuality() + 1);
         }
