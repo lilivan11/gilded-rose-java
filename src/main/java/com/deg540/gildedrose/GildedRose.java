@@ -40,31 +40,23 @@ public class GildedRose {
                 return;
             }
 
-            if ((!isAgedBrieItem(item)) && !isBackstagePassesItem(item)) {
-                if (item.getQuality() > 0) {
-                    item.setQuality(item.getQuality() - 1);
-                }
+            if (isGeneralItem(item)) {
+                decreaseGeneralItemQuality(item);
+            } else if (isAgedBrieItem(item)) {
+                increaseAgedBrieQuality(item);
             } else {
-                if (isAgedBrieItem(item)) {
-                    increaseAgedBrieQuality(item);
-                } else {
-                    increaseBackstagePassesQuality(item);
-                }
+                increaseBackstagePassesQuality(item);
             }
 
             item.setSellIn(item.getSellIn() - 1);
 
             if (item.getSellIn() < 0) {
-                if (!isAgedBrieItem(item)) {
-                    if (!isBackstagePassesItem(item)) {
-                        if (item.getQuality() > 0) {
-                            item.setQuality(item.getQuality() - 1);
-                        }
-                    } else {
-                        expireBackstagePassesQuality(item);
-                    }
-                } else {
+                if (isGeneralItem(item)) {
+                    decreaseGeneralItemQuality(item);
+                } else if (isAgedBrieItem(item)) {
                     increaseAgedBrieQuality(item);
+                } else {
+                    expireBackstagePassesQuality(item);
                 }
             }
         }
@@ -72,6 +64,20 @@ public class GildedRose {
 
     private boolean isSulfurasItem(Item item) {
         return item.getName().contains("Sulfuras");
+    }
+
+    private boolean isGeneralItem(Item item) {
+        return !isAgedBrieItem(item) && !isBackstagePassesItem(item);
+    }
+
+    private void decreaseGeneralItemQuality(Item item) {
+        decreaseQuality(item);
+    }
+
+    private void decreaseQuality(Item item) {
+        if (item.getQuality() > 0) {
+            item.setQuality(item.getQuality() - 1);
+        }
     }
 
     private boolean isAgedBrieItem(Item item) {
