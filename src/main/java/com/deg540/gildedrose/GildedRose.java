@@ -53,24 +53,27 @@ public class GildedRose {
     public void updateQuality() {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-
-            if (isSulfurasItem(item)) {
-                updateSulfurasItem(item);
-                return;
-            }
-
-            if (isAgedBrieItem(item)) {
-                updateAgedBrieItem(item);
-                return;
-            }
-
-            if (isBackstagePassesItem(item)) {
-                updateBackstagePassesItem(item);
-                return;
-            }
-
-            updateGeneralItem(item);
+            updateQualityOfItem(item);
         }
+    }
+
+    private void updateQualityOfItem(Item item){
+        if (isSulfurasItem(item)) {
+            updateSulfurasItem(item);
+            return;
+        }
+
+        if (isAgedBrieItem(item)) {
+            updateAgedBrieItem(item);
+            return;
+        }
+
+        if (isBackstagePassesItem(item)) {
+            updateBackstagePassesItem(item);
+            return;
+        }
+
+        updateGeneralItem(item);
     }
 
     private boolean isSulfurasItem(Item item) {
