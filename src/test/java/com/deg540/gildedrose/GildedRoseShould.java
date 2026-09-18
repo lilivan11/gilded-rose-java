@@ -258,4 +258,54 @@ public class GildedRoseShould {
 
         assertEquals(50, items.get(0).getQuality());
     }
+
+    @Test
+    public void lowerDaysToSellByOneInConjuredItem() {
+        List<Item> items = Arrays.asList(new Item("Conjured Mana Cake", 10, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(9, items.get(0).getSellIn());
+    }
+
+    @Test
+    public void lowerQualityByTwoForAConjuredItemBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Conjured Mana Cake", 10, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(18, items.get(0).getQuality());
+    }
+
+    @Test
+    public void lowerQualityByFourForAConjuredItemAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Conjured Mana Cake", 0, 20));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(16, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverLowerQualityBelowZeroForConjuredItemBeforeSellDate() {
+        List<Item> items = Arrays.asList(new Item("Conjured Mana Cake", 5, 1));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(0, items.get(0).getQuality());
+    }
+
+    @Test
+    public void neverLowerQualityBelowZeroForConjuredItemAfterSellDate() {
+        List<Item> items = Arrays.asList(new Item("Conjured Mana Cake", 0, 3));
+        GildedRose gildedRose = new GildedRose(items);
+
+        gildedRose.updateQuality();
+
+        assertEquals(0, items.get(0).getQuality());
+    }
 }
