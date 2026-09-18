@@ -3,9 +3,28 @@ package com.deg540.gildedrose;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GildedRose {
 
+    private static final String SULFURAS_NAME = "Sulfuras";
+    private static final String AGED_BRIE_NAME = "Aged Brie";
+    private static final int STANDARD_DECREASED_DAYS_AGED_BRIE = 1;
+    private static final int AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED = 1;
+    private static final int AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED = 2;
+    private static final int AGED_BRIE_MAX_QUALITY = 50;
+    private static final String BACKSTAGE_PASSES_NAME = "Backstage passes";
+    private static final int STANDARD_DECREASED_DAYS_BACKSTAGE_PASSES = 1;
+    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_FIRST_PERIOD = 1;
+    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_SECOND_PERIOD = 2;
+    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_THIRD_PERIOD = 3;
+    private static final int BACKSTAGE_PASSES_MAX_QUALITY = 50;
+    private static final int FIRST_DAY_TO_CONSIDER_BACKSTAGE_PASS = -1;
+    private static final int DAYS_LEFT_IN_THIRD_PERIOD_BACKSTAGE_PASSES = 6;
+    private static final int DAYS_LEFT_IN_SECOND_PERIOD_BACKSTAGE_PASSES = 11;
+    private static final int STANDARD_DECREASED_DAYS_GENERAL_ITEM = 1;
+    private static final int MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM = 0;
+    private static final int GENERAL_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED = 2;
+    private static final int STANDARD_LAST_DAY_BEFORE_DAY_PASSED_ALL_ITEMS = 0;
+    
     private List<Item> items = null;
 
     public GildedRose(List<Item> items) {
@@ -31,86 +50,207 @@ public class GildedRose {
         gildedRose.updateQuality();
     }
 
-
     public void updateQuality() {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-
-            if (isSulfurasItem(item)) {
-                return;
-            }
-
-            if (isGeneralItem(item)) {
-                decreaseGeneralItemQuality(item);
-            } else if (isAgedBrieItem(item)) {
-                increaseAgedBrieQuality(item);
-            } else {
-                increaseBackstagePassesQuality(item);
-            }
-
-            item.setSellIn(item.getSellIn() - 1);
-
-            if (item.getSellIn() < 0) {
-                if (isGeneralItem(item)) {
-                    decreaseGeneralItemQuality(item);
-                } else if (isAgedBrieItem(item)) {
-                    increaseAgedBrieQuality(item);
-                } else {
-                    expireBackstagePassesQuality(item);
-                }
-            }
+            updateQualityOfItem(item);
         }
+    }
+
+    private void updateQualityOfItem(Item item){
+        if (isSulfurasItem(item)) {
+            updateSulfurasItem(item);
+            return;
+        }
+
+        if (isAgedBrieItem(item)) {
+            updateAgedBrieItem(item);
+            return;
+        }
+
+        if (isBackstagePassesItem(item)) {
+            updateBackstagePassesItem(item);
+            return;
+        }
+
+        updateGeneralItem(item);
     }
 
     private boolean isSulfurasItem(Item item) {
-        return item.getName().contains("Sulfuras");
+        return item.getName().contains(SULFURAS_NAME);
     }
 
-    private boolean isGeneralItem(Item item) {
-        return !isAgedBrieItem(item) && !isBackstagePassesItem(item);
-    }
-
-    private void decreaseGeneralItemQuality(Item item) {
-        decreaseQuality(item);
-    }
-
-    private void decreaseQuality(Item item) {
-        if (item.getQuality() > 0) {
-            item.setQuality(item.getQuality() - 1);
-        }
+    private void updateSulfurasItem(Item item){
+        return;
     }
 
     private boolean isAgedBrieItem(Item item) {
-        return item.getName().contains("Aged Brie");
+        return item.getName().contains(AGED_BRIE_NAME);
     }
 
-    private void increaseAgedBrieQuality(Item item) {
-        increaseQuality(item);
+    private void updateAgedBrieItem(Item item) {
+        updateAgedBrieDaysLeftToSellIn(item);
+        updateAgedBrieQuality(item);
+    }
+
+    private void updateAgedBrieDaysLeftToSellIn(Item item){
+        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_AGED_BRIE);
+    }
+
+    private void updateAgedBrieQuality(Item item) {
+        if(hasAgedBrieItemMaxQuality(item)){
+            return;
+        }
+
+        if (isItemDayPassed(item)) {
+            updateQualityBeforeDayPassedInAgedBrie(item);
+        }
+        else{
+            updateQualityAfterDayPassedInAgedBrie(item);
+        }
+
+        setMaxQualityIfItIsExcededInAgedBrie(item);
+    }
+
+    private void updateQualityAfterDayPassedInAgedBrie(Item item) {
+        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED);
+    }
+
+    private void updateQualityBeforeDayPassedInAgedBrie(Item item) {
+        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED);
+    }
+
+    private void setMaxQualityIfItIsExcededInAgedBrie(Item item) {
+        if(hasAgedBrieItemMaxQuality(item)){
+            item.setQuality(AGED_BRIE_MAX_QUALITY);
+        }
+    }
+
+    private boolean hasAgedBrieItemMaxQuality(Item item){
+        return item.getQuality() >= AGED_BRIE_MAX_QUALITY;
     }
 
     private boolean isBackstagePassesItem(Item item) {
-        return item.getName().contains("Backstage passes");
+        return item.getName().contains(BACKSTAGE_PASSES_NAME);
     }
 
-    private void increaseBackstagePassesQuality(Item item) {
-        increaseQuality(item);
+    private void updateBackstagePassesItem(Item item){
+        updateBackstagePassesDaysLeftToSellIn(item);
+        updateBackstagePassesQuality(item);
+    }
 
-        if (item.getSellIn() < 11) {
-            increaseQuality(item);
+    private void updateBackstagePassesDaysLeftToSellIn(Item item){
+        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_BACKSTAGE_PASSES);
+    }
+
+    private void updateBackstagePassesQuality(Item item) {
+        if(isExpiredBackstagePasses(item)){
+            expireBackstagePasses(item);
+            return;
+        }
+        
+        if(hasBackstagePassesMaxQuality(item)){
+            setMaxQualityIfItIsExcededInBackstagePass(item);
+            return;
         }
 
-        if (item.getSellIn() < 6) {
-            increaseQuality(item);
+        if(isInThirdPeriodBackstagePasses(item)){
+            updateQualityForThirdPeriodBackstagePass(item);
+            setMaxQualityIfItIsExcededInBackstagePass(item);
+            return;
+        }
+
+        if(isInSecondPeriodBackstagePasses(item)){
+            updateQualityForSecondPeriodBackstagePass(item);
+            setMaxQualityIfItIsExcededInBackstagePass(item);
+            return;
+        }
+
+        updateQualityForFirstPeriodBackstagePass(item);
+        setMaxQualityIfItIsExcededInBackstagePass(item);
+    }
+
+    private void updateQualityForFirstPeriodBackstagePass(Item item) {
+        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_FIRST_PERIOD);
+    }
+
+    private void updateQualityForSecondPeriodBackstagePass(Item item) {
+        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_SECOND_PERIOD);
+    }
+
+    private void updateQualityForThirdPeriodBackstagePass(Item item) {
+        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_THIRD_PERIOD);
+    }
+
+    private void setMaxQualityIfItIsExcededInBackstagePass(Item item) {
+        if(hasBackstagePassesMaxQuality(item)){
+            item.setQuality(BACKSTAGE_PASSES_MAX_QUALITY);
         }
     }
 
-    private void expireBackstagePassesQuality(Item item) {
+    private boolean hasBackstagePassesMaxQuality(Item item){
+        return item.getQuality() >= BACKSTAGE_PASSES_MAX_QUALITY;
+    }
+
+    private boolean isExpiredBackstagePasses(Item item){
+        return item.getSellIn() <= FIRST_DAY_TO_CONSIDER_BACKSTAGE_PASS;
+    }
+
+    private boolean isInThirdPeriodBackstagePasses(Item item) {
+        return item.getSellIn() < DAYS_LEFT_IN_THIRD_PERIOD_BACKSTAGE_PASSES;
+    }
+
+    private boolean isInSecondPeriodBackstagePasses(Item item) {
+        return item.getSellIn() < DAYS_LEFT_IN_SECOND_PERIOD_BACKSTAGE_PASSES;
+    }
+
+    private void expireBackstagePasses(Item item) {
         item.setQuality(0);
     }
 
-    private void increaseQuality(Item item) {
-        if (item.getQuality() < 50) {
-            item.setQuality(item.getQuality() + 1);
+    private void updateGeneralItem(Item item){
+        updateGeneralItemDaysLeftToSellIn(item);
+        updateGeneralItemQuality(item);
+    }
+
+    private void updateGeneralItemDaysLeftToSellIn(Item item){
+        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_GENERAL_ITEM);
+    }
+
+    private void updateGeneralItemQuality(Item item){
+        if(isQualityBelowPossibleInGeneralItem(item)){
+            return;
         }
+
+        if(isItemDayPassed(item)){
+            updateQualityAfterDayPassedInGeneralItem(item);
+        }
+        else{
+            updateQualityBeforeDayPassedInGeneralItem(item);
+        }
+
+        setMinimumQualityIfIsBelowPossibleInGeneralItem(item);
+    }
+
+    private void updateQualityBeforeDayPassedInGeneralItem(Item item) {
+        item.setQuality(item.getQuality() - 1);
+    }
+
+    private void setMinimumQualityIfIsBelowPossibleInGeneralItem(Item item) {
+        if(isQualityBelowPossibleInGeneralItem(item)){
+            item.setQuality(MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM);
+        }
+    }
+
+    private void updateQualityAfterDayPassedInGeneralItem(Item item) {
+        item.setQuality(item.getQuality() - GENERAL_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED);
+    }
+
+    private boolean isQualityBelowPossibleInGeneralItem(Item item) {
+        return item.getQuality() <= MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM;
+    }
+
+    private boolean isItemDayPassed(Item item){
+        return item.getSellIn() < STANDARD_LAST_DAY_BEFORE_DAY_PASSED_ALL_ITEMS;
     }
 }
