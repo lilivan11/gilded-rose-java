@@ -5,15 +5,6 @@ import java.util.List;
 
 public class GildedRose {
 
-    private static final String BACKSTAGE_PASSES_NAME = "Backstage passes";
-    private static final int STANDARD_DECREASED_DAYS_BACKSTAGE_PASSES = 1;
-    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_FIRST_PERIOD = 1;
-    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_SECOND_PERIOD = 2;
-    private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_THIRD_PERIOD = 3;
-    private static final int BACKSTAGE_PASSES_MAX_QUALITY = 50;
-    private static final int FIRST_DAY_TO_CONSIDER_BACKSTAGE_PASS = -1;
-    private static final int DAYS_LEFT_IN_THIRD_PERIOD_BACKSTAGE_PASSES = 6;
-    private static final int DAYS_LEFT_IN_SECOND_PERIOD_BACKSTAGE_PASSES = 11;
     private static final String CONJURED_NAME = "Conjured";
     private static final int STANDARD_DECREASED_DAYS_CONJURED_ITEM = 1;
     private static final int MINIMUM_QUALITY_POSSIBLE_CONJURED_ITEM = 0;
@@ -25,6 +16,7 @@ public class GildedRose {
     private GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
     private SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
     private AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
+    private BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
     public GildedRose(List<Item> items) {
         this.items = items;
@@ -68,8 +60,8 @@ public class GildedRose {
             return;
         }
 
-        if (isBackstagePassesItem(item)) {
-            updateBackstagePassesItem(item);
+        if (backstagePassItemUpdater.isBackstagePassItem(item)) {
+            backstagePassItemUpdater.update(item);
             return;
         }
 
@@ -82,84 +74,6 @@ public class GildedRose {
     }
 
 
-
-    private boolean isBackstagePassesItem(Item item) {
-        return item.getName().contains(BACKSTAGE_PASSES_NAME);
-    }
-
-    private void updateBackstagePassesItem(Item item){
-        updateBackstagePassesDaysLeftToSellIn(item);
-        updateBackstagePassesQuality(item);
-    }
-
-    private void updateBackstagePassesDaysLeftToSellIn(Item item){
-        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_BACKSTAGE_PASSES);
-    }
-
-    private void updateBackstagePassesQuality(Item item) {
-        if(isExpiredBackstagePasses(item)){
-            expireBackstagePasses(item);
-            return;
-        }
-        
-        if(hasBackstagePassesMaxQuality(item)){
-            setMaxQualityIfItIsExcededInBackstagePass(item);
-            return;
-        }
-
-        if(isInThirdPeriodBackstagePasses(item)){
-            updateQualityForThirdPeriodBackstagePass(item);
-            setMaxQualityIfItIsExcededInBackstagePass(item);
-            return;
-        }
-
-        if(isInSecondPeriodBackstagePasses(item)){
-            updateQualityForSecondPeriodBackstagePass(item);
-            setMaxQualityIfItIsExcededInBackstagePass(item);
-            return;
-        }
-
-        updateQualityForFirstPeriodBackstagePass(item);
-        setMaxQualityIfItIsExcededInBackstagePass(item);
-    }
-
-    private void updateQualityForFirstPeriodBackstagePass(Item item) {
-        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_FIRST_PERIOD);
-    }
-
-    private void updateQualityForSecondPeriodBackstagePass(Item item) {
-        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_SECOND_PERIOD);
-    }
-
-    private void updateQualityForThirdPeriodBackstagePass(Item item) {
-        item.setQuality(item.getQuality() + BACKSTAGE_PASSES_INCREASED_QUALITY_IN_THIRD_PERIOD);
-    }
-
-    private void setMaxQualityIfItIsExcededInBackstagePass(Item item) {
-        if(hasBackstagePassesMaxQuality(item)){
-            item.setQuality(BACKSTAGE_PASSES_MAX_QUALITY);
-        }
-    }
-
-    private boolean hasBackstagePassesMaxQuality(Item item){
-        return item.getQuality() >= BACKSTAGE_PASSES_MAX_QUALITY;
-    }
-
-    private boolean isExpiredBackstagePasses(Item item){
-        return item.getSellIn() <= FIRST_DAY_TO_CONSIDER_BACKSTAGE_PASS;
-    }
-
-    private boolean isInThirdPeriodBackstagePasses(Item item) {
-        return item.getSellIn() < DAYS_LEFT_IN_THIRD_PERIOD_BACKSTAGE_PASSES;
-    }
-
-    private boolean isInSecondPeriodBackstagePasses(Item item) {
-        return item.getSellIn() < DAYS_LEFT_IN_SECOND_PERIOD_BACKSTAGE_PASSES;
-    }
-
-    private void expireBackstagePasses(Item item) {
-        item.setQuality(0);
-    }
 
     private boolean isConjuredItem(Item item) {
         return item.getName().contains(CONJURED_NAME);
