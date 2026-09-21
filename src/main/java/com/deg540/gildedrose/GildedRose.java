@@ -20,9 +20,6 @@ public class GildedRose {
     private static final int FIRST_DAY_TO_CONSIDER_BACKSTAGE_PASS = -1;
     private static final int DAYS_LEFT_IN_THIRD_PERIOD_BACKSTAGE_PASSES = 6;
     private static final int DAYS_LEFT_IN_SECOND_PERIOD_BACKSTAGE_PASSES = 11;
-    private static final int STANDARD_DECREASED_DAYS_GENERAL_ITEM = 1;
-    private static final int MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM = 0;
-    private static final int GENERAL_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED = 2;
     private static final String CONJURED_NAME = "Conjured";
     private static final int STANDARD_DECREASED_DAYS_CONJURED_ITEM = 1;
     private static final int MINIMUM_QUALITY_POSSIBLE_CONJURED_ITEM = 0;
@@ -31,9 +28,11 @@ public class GildedRose {
     private static final int STANDARD_LAST_DAY_BEFORE_DAY_PASSED_ALL_ITEMS = 0;
     
     private List<Item> items = null;
+    private GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
 
     public GildedRose(List<Item> items) {
         this.items = items;
+
     }
 
     /**
@@ -83,7 +82,7 @@ public class GildedRose {
             return;
         }
 
-        updateGeneralItem(item);
+        generalItemUpdater.update(item);
     }
 
     private boolean isSulfurasItem(Item item) {
@@ -216,48 +215,6 @@ public class GildedRose {
 
     private void expireBackstagePasses(Item item) {
         item.setQuality(0);
-    }
-
-    private void updateGeneralItem(Item item){
-        updateGeneralItemDaysLeftToSellIn(item);
-        updateGeneralItemQuality(item);
-    }
-
-    private void updateGeneralItemDaysLeftToSellIn(Item item){
-        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_GENERAL_ITEM);
-    }
-
-    private void updateGeneralItemQuality(Item item){
-        if(isQualityBelowPossibleInGeneralItem(item)){
-            return;
-        }
-
-        if(isItemDayPassed(item)){
-            updateQualityAfterDayPassedInGeneralItem(item);
-        }
-        else{
-            updateQualityBeforeDayPassedInGeneralItem(item);
-        }
-
-        setMinimumQualityIfIsBelowPossibleInGeneralItem(item);
-    }
-
-    private void updateQualityBeforeDayPassedInGeneralItem(Item item) {
-        item.setQuality(item.getQuality() - 1);
-    }
-
-    private void setMinimumQualityIfIsBelowPossibleInGeneralItem(Item item) {
-        if(isQualityBelowPossibleInGeneralItem(item)){
-            item.setQuality(MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM);
-        }
-    }
-
-    private void updateQualityAfterDayPassedInGeneralItem(Item item) {
-        item.setQuality(item.getQuality() - GENERAL_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED);
-    }
-
-    private boolean isQualityBelowPossibleInGeneralItem(Item item) {
-        return item.getQuality() <= MINIMUM_QUALITY_POSSIBLE_GENERAL_ITEM;
     }
 
     private boolean isConjuredItem(Item item) {
