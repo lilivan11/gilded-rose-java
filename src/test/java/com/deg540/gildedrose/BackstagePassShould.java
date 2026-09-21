@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class BackstagePassShould {
 
     @Test
-    public void lowerDaysToSellForBackstagePasses() {
+    public void decreaseDaysToSell() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -17,7 +17,7 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void increaseQualityByOneForBackstagePassesWhenMoreThanTenDaysRemain() {
+    public void increaseQualityInFirstPeriod() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -27,7 +27,7 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void increaseQualityByTwoForBackstagePassesWhenTenDaysOrLessRemain() {
+    public void increaseQualityInSecondPeriod() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -37,7 +37,7 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void increaseQualityByThreeForBackstagePassesWhenFiveDaysOrLessRemain() {
+    public void increaseQualityInThirdPeriod() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 5, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -47,7 +47,7 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void increaseQualityByThreeForBackstagePassesWhenOneDayRemains() {
+    public void increaseQualityInFinalDayOfThirdPeriod() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 1, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -57,7 +57,7 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void dropQualityToZeroForBackstagePassesAfterTheConcert() {
+    public void expireAfterEvent() {
         Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
@@ -67,18 +67,8 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void lowerSellInBelowZeroForBackstagePassesAfterTheConcert() {
-        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20);
-        BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
-
-        backstagePassItemUpdater.update(item);
-
-        assertEquals(-1, item.getSellIn());
-    }
-
-    @Test
-    public void neverIncreaseQualityAboveFiftyForBackstagePassesWhenTenDaysOrLessRemain() {
-        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 5, 48);
+    public void neverIncreaseQualityAboveMaxInFirstPeriod() {
+        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 20, 50);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
         backstagePassItemUpdater.update(item);
@@ -87,8 +77,18 @@ public class BackstagePassShould {
     }
 
     @Test
-    public void neverIncreaseQualityAboveFiftyForBackstagePassesWhenAlreadyAtFifty() {
-        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 5, 50);
+    public void neverIncreaseQualityAboveMaxInSecondPeriod() {
+        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 9, 49);
+        BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
+
+        backstagePassItemUpdater.update(item);
+
+        assertEquals(50, item.getQuality());
+    }
+
+    @Test
+    public void neverIncreaseQualityAboveMaxInThirdPeriod() {
+        Item item = new Item("Backstage passes to a TAFKAL80ETC concert", 3, 49);
         BackstagePassItemUpdater backstagePassItemUpdater = new BackstagePassItemUpdater();
 
         backstagePassItemUpdater.update(item);

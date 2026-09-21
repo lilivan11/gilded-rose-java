@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class SulfurasItemShould {
 
     @Test
-    public void neverIncreaseQualityAbove80ForSulfuras() {
+    public void neverIncreaseQualityAboveMax() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", 10, 80);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -17,7 +17,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerSellInForSulfurasBeforeSellDate() {
+    public void neverDecreaseSellInBeforeSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", 10, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -27,7 +27,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerQualityForSulfurasBeforeSellDate() {
+    public void neverDecreaseQualityBeforeSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", 10, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -37,7 +37,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerSellInForSulfurasAfterSellDate() {
+    public void neverDecreaseSellInAfterSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", 0, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -47,7 +47,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerQualityForSulfurasAfterSellDate() {
+    public void neverDecreaseQualityAfterSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", 0, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -57,7 +57,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerSellInForSulfurasWithNegativeSellIn() {
+    public void neverDecreaseSellInWithNegativeSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", -1, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
@@ -67,7 +67,7 @@ public class SulfurasItemShould {
     }
 
     @Test
-    public void neverLowerQualityForSulfurasWithNegativeSellIn() {
+    public void neverDecreaseQualityWithNegativeSellDate() {
         Item item = new Item("Sulfuras, Hand of Ragnaros", -1, 50);
         SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 

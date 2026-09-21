@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class GeneralItemShould {
 
     @Test
-    public void lowerDaysToSell() {
+    public void decreaseDaysToSell() {
         GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
         Item item = new Item("+5 Dexterity Vest", 10, 20);
         
@@ -20,7 +20,7 @@ public class GeneralItemShould {
     }
 
     @Test
-    public void lowerQualityBeforeSellDate() {
+    public void decreaseQualityBeforeSellDate() {
         GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
         Item item = new Item("+5 Dexterity Vest", 10, 20);
         
@@ -30,7 +30,7 @@ public class GeneralItemShould {
     }
 
     @Test
-    public void lowerQualityAfterSellDate() {
+    public void decreaseQualityAfterSellDate() {
         GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
         Item item = new Item("+5 Dexterity Vest", 0, 20);
         
@@ -40,7 +40,7 @@ public class GeneralItemShould {
     }
 
     @Test
-    public void neverLowerQualityBelowMinimum() {
+    public void neverDecreaseQualityBelowMinimum() {
         GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
         Item item = new Item("+5 Dexterity Vest", 5, 0);
     
