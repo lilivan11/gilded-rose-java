@@ -2,15 +2,15 @@ package com.deg540.gildedrose;
 
 public class AgedBrieItemUpdater {
 
-    private static final String AGED_BRIE_NAME = "Aged Brie";
-    private static final int STANDARD_DECREASED_DAYS_AGED_BRIE = 1;
-    private static final int AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED = 1;
-    private static final int AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED = 2;
-    private static final int AGED_BRIE_MAX_QUALITY = 50;
-    private static final int STANDARD_LAST_DAY_BEFORE_DAY_PASSED = 0;
+    private static final String NAME = "Aged Brie";
+    private static final int DECREASED_DAYS = 1;
+    private static final int INCREASED_QUALITY_BEFORE_DAY_PASSED = 1;
+    private static final int INCREASED_QUALITY_AFTER_DAY_PASSED = 2;
+    private static final int MAX_QUALITY = 50;
+    private static final int LAST_DAY_BEFORE_DAY_PASSED = 0;
 
     public boolean isAgedBrieItem(Item item) {
-        return item.getName().contains(AGED_BRIE_NAME);
+        return item.getName().contains(NAME);
     }
 
     public void update(Item item) {
@@ -19,7 +19,7 @@ public class AgedBrieItemUpdater {
     }
 
     private void updateDaysLeftToSellIn(Item item) {
-        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_AGED_BRIE);
+        item.setSellIn(item.getSellIn() - DECREASED_DAYS);
     }
 
     private void updateQuality(Item item) {
@@ -28,33 +28,32 @@ public class AgedBrieItemUpdater {
         }
 
         if (isItemDayPassed(item)) {
-            increaseQualityAfterDayPassed(item);
+            increaseQuality(item, INCREASED_QUALITY_AFTER_DAY_PASSED);
         } else {
-            increaseQualityBeforeDayPassed(item);
-        }
-
-        setMaxQualityIfExceeded(item);
-    }
-
-    private void increaseQualityBeforeDayPassed(Item item) {
-        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED);
-    }
-
-    private void increaseQualityAfterDayPassed(Item item) {
-        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED);
-    }
-
-    private void setMaxQualityIfExceeded(Item item) {
-        if (hasMaxQuality(item)) {
-            item.setQuality(AGED_BRIE_MAX_QUALITY);
+            increaseQuality(item, INCREASED_QUALITY_BEFORE_DAY_PASSED);
         }
     }
 
     private boolean hasMaxQuality(Item item) {
-        return item.getQuality() >= AGED_BRIE_MAX_QUALITY;
+        return item.getQuality() == MAX_QUALITY;
     }
 
     private boolean isItemDayPassed(Item item) {
-        return item.getSellIn() < STANDARD_LAST_DAY_BEFORE_DAY_PASSED;
+        return item.getSellIn() < LAST_DAY_BEFORE_DAY_PASSED;
+    }
+
+    private void increaseQuality(Item item,int increasedQuality){
+        item.setQuality(item.getQuality() + increasedQuality);
+        setMaxQualityIfExceeded(item);
+    }
+
+    private void setMaxQualityIfExceeded(Item item) {
+        if (isMaxQualityExceeded(item)) {
+            item.setQuality(MAX_QUALITY);
+        }
+    }
+
+    private boolean isMaxQualityExceeded(Item item){
+        return item.getQuality() > MAX_QUALITY;
     }
 }

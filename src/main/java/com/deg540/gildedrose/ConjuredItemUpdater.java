@@ -2,15 +2,15 @@ package com.deg540.gildedrose;
 
 public class ConjuredItemUpdater {
 
-    private static final String CONJURED_NAME = "Conjured";
-    private static final int STANDARD_DECREASED_DAYS_CONJURED_ITEM = 1;
-    private static final int MINIMUM_QUALITY_POSSIBLE_CONJURED_ITEM = 0;
-    private static final int CONJURED_ITEM_DECREASED_QUALITY_BEFORE_DAY_PASSED = 2;
-    private static final int CONJURED_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED = 4;
-    private static final int STANDARD_LAST_DAY_BEFORE_DAY_PASSED = 0;
+    private static final String NAME = "Conjured";
+    private static final int DECREASED_DAYS = 1;
+    private static final int MINIMUM_QUALITY = 0;
+    private static final int DECREASED_QUALITY_BEFORE_DAY_PASSED = 2;
+    private static final int DECREASED_QUALITY_AFTER_DAY_PASSED = 4;
+    private static final int LAST_DAY_BEFORE_DAY_PASSED = 0;
 
     public boolean isConjuredItem(Item item) {
-        return item.getName().contains(CONJURED_NAME);
+        return item.getName().contains(NAME);
     }
 
     public void update(Item item) {
@@ -19,7 +19,7 @@ public class ConjuredItemUpdater {
     }
 
     private void updateDaysLeftToSellIn(Item item) {
-        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_CONJURED_ITEM);
+        item.setSellIn(item.getSellIn() - DECREASED_DAYS);
     }
 
     private void updateQuality(Item item) {
@@ -28,33 +28,28 @@ public class ConjuredItemUpdater {
         }
 
         if (isItemDayPassed(item)) {
-            decreaseQualityAfterDayPassed(item);
+            decreaseQuality(item, DECREASED_QUALITY_AFTER_DAY_PASSED);
         } else {
-            decreaseQualityBeforeDayPassed(item);
-        }
-
-        setMinimumQualityIfIsBelowPossible(item);
-    }
-
-    private void decreaseQualityBeforeDayPassed(Item item) {
-        item.setQuality(item.getQuality() - CONJURED_ITEM_DECREASED_QUALITY_BEFORE_DAY_PASSED);
-    }
-
-    private void decreaseQualityAfterDayPassed(Item item) {
-        item.setQuality(item.getQuality() - CONJURED_ITEM_DECREASED_QUALITY_AFTER_DAY_PASSED);
-    }
-
-    private void setMinimumQualityIfIsBelowPossible(Item item) {
-        if (isQualityBelowPossible(item)) {
-            item.setQuality(MINIMUM_QUALITY_POSSIBLE_CONJURED_ITEM);
+            decreaseQuality(item, DECREASED_QUALITY_BEFORE_DAY_PASSED);
         }
     }
 
     private boolean isQualityBelowPossible(Item item) {
-        return item.getQuality() <= MINIMUM_QUALITY_POSSIBLE_CONJURED_ITEM;
+        return item.getQuality() <= MINIMUM_QUALITY;
     }
 
     private boolean isItemDayPassed(Item item) {
-        return item.getSellIn() < STANDARD_LAST_DAY_BEFORE_DAY_PASSED;
+        return item.getSellIn() < LAST_DAY_BEFORE_DAY_PASSED;
+    }
+
+    private void decreaseQuality(Item item, int decreasedQuality){
+        item.setQuality(item.getQuality() - decreasedQuality);
+        setMinimumQualityIfIsBelowPossible(item);
+    }
+
+    private void setMinimumQualityIfIsBelowPossible(Item item) {
+        if (isQualityBelowPossible(item)) {
+            item.setQuality(MINIMUM_QUALITY);
+        }
     }
 }
