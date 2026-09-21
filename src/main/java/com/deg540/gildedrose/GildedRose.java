@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GildedRose {
 
-    private static final String SULFURAS_NAME = "Sulfuras";
+    
     private static final String AGED_BRIE_NAME = "Aged Brie";
     private static final int STANDARD_DECREASED_DAYS_AGED_BRIE = 1;
     private static final int AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED = 1;
@@ -29,6 +29,7 @@ public class GildedRose {
     
     private List<Item> items = null;
     private GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
+    private SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
 
     public GildedRose(List<Item> items) {
         this.items = items;
@@ -62,8 +63,8 @@ public class GildedRose {
     }
 
     private void updateQualityOfItem(Item item){
-        if (isSulfurasItem(item)) {
-            updateSulfurasItem(item);
+        if (sulfurasItemUpdater.isSulfurasItem(item)) {
+            sulfurasItemUpdater.update(item);
             return;
         }
 
@@ -85,13 +86,7 @@ public class GildedRose {
         generalItemUpdater.update(item);
     }
 
-    private boolean isSulfurasItem(Item item) {
-        return item.getName().contains(SULFURAS_NAME);
-    }
 
-    private void updateSulfurasItem(Item item){
-        return;
-    }
 
     private boolean isAgedBrieItem(Item item) {
         return item.getName().contains(AGED_BRIE_NAME);
