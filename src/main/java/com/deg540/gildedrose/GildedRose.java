@@ -5,12 +5,6 @@ import java.util.List;
 
 public class GildedRose {
 
-    
-    private static final String AGED_BRIE_NAME = "Aged Brie";
-    private static final int STANDARD_DECREASED_DAYS_AGED_BRIE = 1;
-    private static final int AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED = 1;
-    private static final int AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED = 2;
-    private static final int AGED_BRIE_MAX_QUALITY = 50;
     private static final String BACKSTAGE_PASSES_NAME = "Backstage passes";
     private static final int STANDARD_DECREASED_DAYS_BACKSTAGE_PASSES = 1;
     private static final int BACKSTAGE_PASSES_INCREASED_QUALITY_IN_FIRST_PERIOD = 1;
@@ -30,6 +24,7 @@ public class GildedRose {
     private List<Item> items = null;
     private GeneralItemUpdater generalItemUpdater = new GeneralItemUpdater();
     private SulfurasItemUpdater sulfurasItemUpdater = new SulfurasItemUpdater();
+    private AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
     public GildedRose(List<Item> items) {
         this.items = items;
@@ -68,8 +63,8 @@ public class GildedRose {
             return;
         }
 
-        if (isAgedBrieItem(item)) {
-            updateAgedBrieItem(item);
+        if (agedBrieItemUpdater.isAgedBrieItem(item)) {
+            agedBrieItemUpdater.update(item);
             return;
         }
 
@@ -87,52 +82,6 @@ public class GildedRose {
     }
 
 
-
-    private boolean isAgedBrieItem(Item item) {
-        return item.getName().contains(AGED_BRIE_NAME);
-    }
-
-    private void updateAgedBrieItem(Item item) {
-        updateAgedBrieDaysLeftToSellIn(item);
-        updateAgedBrieQuality(item);
-    }
-
-    private void updateAgedBrieDaysLeftToSellIn(Item item){
-        item.setSellIn(item.getSellIn() - STANDARD_DECREASED_DAYS_AGED_BRIE);
-    }
-
-    private void updateAgedBrieQuality(Item item) {
-        if(hasAgedBrieItemMaxQuality(item)){
-            return;
-        }
-
-        if (isItemDayPassed(item)) {
-            updateQualityBeforeDayPassedInAgedBrie(item);
-        }
-        else{
-            updateQualityAfterDayPassedInAgedBrie(item);
-        }
-
-        setMaxQualityIfItIsExcededInAgedBrie(item);
-    }
-
-    private void updateQualityAfterDayPassedInAgedBrie(Item item) {
-        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_BEFORE_DAY_PASSED);
-    }
-
-    private void updateQualityBeforeDayPassedInAgedBrie(Item item) {
-        item.setQuality(item.getQuality() + AGED_BRIE_INCREASED_QUALITY_AFTER_DAY_PASSED);
-    }
-
-    private void setMaxQualityIfItIsExcededInAgedBrie(Item item) {
-        if(hasAgedBrieItemMaxQuality(item)){
-            item.setQuality(AGED_BRIE_MAX_QUALITY);
-        }
-    }
-
-    private boolean hasAgedBrieItemMaxQuality(Item item){
-        return item.getQuality() >= AGED_BRIE_MAX_QUALITY;
-    }
 
     private boolean isBackstagePassesItem(Item item) {
         return item.getName().contains(BACKSTAGE_PASSES_NAME);
