@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class ConjuredItemShould {
 
     @Test
-    public void lowerDaysToSellByOneInConjuredItem() {
+    public void decreaseDaysToSell() {
         Item item = new Item("Conjured Mana Cake", 10, 20);
         ConjuredItemUpdater conjuredItemUpdater = new ConjuredItemUpdater();
 
@@ -17,7 +17,7 @@ public class ConjuredItemShould {
     }
 
     @Test
-    public void lowerQualityByTwoForAConjuredItemBeforeSellDate() {
+    public void decreaseQualityBeforeSellDate() {
         Item item = new Item("Conjured Mana Cake", 10, 20);
         ConjuredItemUpdater conjuredItemUpdater = new ConjuredItemUpdater();
 
@@ -27,7 +27,7 @@ public class ConjuredItemShould {
     }
 
     @Test
-    public void lowerQualityByFourForAConjuredItemAfterSellDate() {
+    public void decreaseQualityAfterSellDate() {
         Item item = new Item("Conjured Mana Cake", 0, 20);
         ConjuredItemUpdater conjuredItemUpdater = new ConjuredItemUpdater();
 
@@ -37,7 +37,7 @@ public class ConjuredItemShould {
     }
 
     @Test
-    public void neverLowerQualityBelowZeroForConjuredItemBeforeSellDate() {
+    public void neverDecreaseQualityBelowZeroBeforeSellDate() {
         Item item = new Item("Conjured Mana Cake", 5, 1);
         ConjuredItemUpdater conjuredItemUpdater = new ConjuredItemUpdater();
 
@@ -47,7 +47,7 @@ public class ConjuredItemShould {
     }
 
     @Test
-    public void neverLowerQualityBelowZeroForConjuredItemAfterSellDate() {
+    public void neverDecreaseQualityBelowZeroAfterSellDate() {
         Item item = new Item("Conjured Mana Cake", 0, 3);
         ConjuredItemUpdater conjuredItemUpdater = new ConjuredItemUpdater();
 

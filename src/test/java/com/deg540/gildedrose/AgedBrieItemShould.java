@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class AgedBrieItemShould {
 
     @Test
-    public void lowerDaysToSellForAgedBrie() {
+    public void decreaseDaysToSell() {
         Item item = new Item("Aged Brie", 10, 20);
         AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
@@ -17,7 +17,7 @@ public class AgedBrieItemShould {
     }
 
     @Test
-    public void increaseQualityByOneForAgedBrieBeforeSellDate() {
+    public void increaseQualityBeforeSellDate() {
         Item item = new Item("Aged Brie", 10, 20);
         AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
@@ -27,7 +27,7 @@ public class AgedBrieItemShould {
     }
 
     @Test
-    public void increaseQualityByTwoForAgedBrieAfterSellDate() {
+    public void increaseQualityAfterSellDate() {
         Item item = new Item("Aged Brie", 0, 20);
         AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
@@ -37,7 +37,7 @@ public class AgedBrieItemShould {
     }
 
     @Test
-    public void neverIncreaseQualityAboveFiftyForAgedBrieBeforeSellDate() {
+    public void neverIncreaseQualityAboveMaxBeforeSellDate() {
         Item item = new Item("Aged Brie", 10, 50);
         AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
@@ -47,7 +47,7 @@ public class AgedBrieItemShould {
     }
 
     @Test
-    public void neverIncreaseQualityAboveFiftyForAgedBrieAfterSellDate() {
+    public void neverIncreaseQualityAboveMaxAfterSellDate() {
         Item item = new Item("Aged Brie", 0, 49);
         AgedBrieItemUpdater agedBrieItemUpdater = new AgedBrieItemUpdater();
 
