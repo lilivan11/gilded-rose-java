@@ -2,8 +2,13 @@
 # Build (ejecutar desde la raíz del proyecto):
 #   docker build -f TestDockerfile -t gilded-rose-test .
 #
-# Ejecutar toda la suite (comportamiento por defecto):
+# Ejecutar toda la suite (comportamiento por defecto, incluye el informe Jacoco):
 #   docker run --rm gilded-rose-test
+#
+# Extraer el informe Jacoco generado a la máquina host:
+#   docker run --name gilded-rose-test-run gilded-rose-test
+#   docker cp gilded-rose-test-run:/app/build/reports/jacoco ./build/reports/jacoco
+#   docker rm gilded-rose-test-run
 #
 
 FROM eclipse-temurin:8-jdk-jammy
@@ -22,4 +27,4 @@ COPY src ./src
 
 RUN ./gradlew testClasses --no-daemon || true
 
-CMD ["./gradlew", "test", "--no-daemon", "--console=plain"]
+CMD ["./gradlew", "test", "jacocoTestReport", "--no-daemon", "--console=plain"]
